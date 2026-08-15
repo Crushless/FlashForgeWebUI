@@ -95,7 +95,7 @@ export function updateFeatureVisibility(): void {
 
   if (homeAxes) {
     homeAxes.disabled = !features.canHome;
-    homeAxes.title = !features.canHome ? 'Homing is not available over the LAN API for this printer' : null;
+    homeAxes.title = !features.canHome ? 'Homing is not available over the LAN API for this printer' : '';
   }
 }
 
