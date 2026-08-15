@@ -83,7 +83,7 @@ export function updateFeatureVisibility(): void {
   const ledOn = $('btn-led-on') as HTMLButtonElement | null;
   const ledOff = $('btn-led-off') as HTMLButtonElement | null;
   const ledEnabled = features.hasLED || features.ledUsesLegacyAPI || false;
-  const homeAxesButtons = document.querySelectorAll<HTMLButtonElement>('#btn-home-axes');
+  const homeAxes = $('btn-home-axes') as HTMLButtonElement | null;
 
   if (ledOn) {
     ledOn.disabled = !ledEnabled;
@@ -93,12 +93,10 @@ export function updateFeatureVisibility(): void {
     ledOff.disabled = !ledEnabled;
   }
 
-  homeAxesButtons.forEach((homeAxes) => {
+  if (homeAxes) {
     homeAxes.disabled = !features.canHome;
-    homeAxes.title = features.canHome
-    ? 'Home Axes'
-    : 'Homing is not available over the LAN API for this printer';
-  });
+    homeAxes.title = !features.canHome ? 'Homing is not available over the LAN API for this printer' : null;
+  }
 }
 
 interface JobStartOptions {
