@@ -28,6 +28,21 @@ interface LucideGlobal {
 
 let scanInProgress = false;
 
+function isCreator5Type(type: string): boolean {
+  return type === 'creator5' || type === 'creator5pro';
+}
+
+function getProductIdForManualType(type: string): number | undefined {
+  switch (type) {
+    case 'creator5':
+      return 40;
+    case 'creator5pro':
+      return 41;
+    default:
+      return undefined;
+  }
+}
+
 /**
  * Initialize discovery feature
  */
@@ -112,14 +127,29 @@ function setupDiscoveryModal(): void {
   const typeSelect = $('discovery-printer-type') as HTMLSelectElement | null;
   typeSelect?.addEventListener('change', () => {
     const checkCodeGroup = $('discovery-check-code-group');
-    if (
-      typeSelect.value === 'new' ||
-      typeSelect.value === 'creator5' ||
-      typeSelect.value === 'creator5pro'
-    ) {
+    const serialGroup = $('discovery-serial-group');
+    const serialInput = $('discovery-manual-serial') as HTMLInputElement | null;
+
+    const isNewApi =
+    typeSelect.value === 'new' ||
+    isCreator5Type(typeSelect.value);
+
+    const isCreator5 = isCreator5Type(typeSelect.value);
+
+    if (isNewApi) {
       checkCodeGroup?.classList.remove('hidden');
     } else {
       checkCodeGroup?.classList.add('hidden');
+    }
+
+    if (isCreator5) {
+      serialGroup?.classList.remove('hidden');
+    } else {
+      serialGroup?.classList.add('hidden');
+
+      if (serialInput) {
+        serialInput.value = '';
+      }
     }
   });
 
@@ -409,7 +439,7 @@ async function connectManually(): Promise<void> {
   const ip = ipInput.value.trim();
   const manualSerial = serialInput?.value.trim() ?? '';
   const userSelectedType = typeSelect.value;
-  const productId = userSelectedType === 'creator5' ? 40 : userSelectedType === 'creator5pro' ? 41 : undefined;
+  const productId = getProductIdForManualType(userSelectedType);
   const userCheckCode = checkCodeInput?.value.trim();
 
   // Validate IP
@@ -419,7 +449,7 @@ async function connectManually(): Promise<void> {
   }
 
   // Validate Serial
-  if ((userSelectedType === 'creator5' || userSelectedType === 'creator5pro') && !manualSerial) {
+  if (isCreator5Type(userSelectedType) && !manualSerial) {
     showToast('Please enter the printer serial number', 'error');
     return;
   }
@@ -458,7 +488,7 @@ async function connectManually(): Promise<void> {
     console.log(`[Manual] Detected: ${typeName} (${is5MFamily ? '5M family' : 'legacy'})`);
 
     // STEP 2: Validate user selection against detection (warn if mismatch)
-    const selectedClientType = userSelectedType === 'creator5' || userSelectedType === 'creator5pro' ? 'new' : userSelectedType;
+    const selectedClientType = isCreator5Type(userSelectedType) ? 'new' : userSelectedType;
     if (selectedClientType !== detectedType) {
       const proceed = confirm(
         `Warning: You selected "${userSelectedType}" but the printer was detected as "${detectedType}".\n\n` +
