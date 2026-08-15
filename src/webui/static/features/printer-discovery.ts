@@ -501,6 +501,7 @@ async function connectManually(): Promise<void> {
         model: typeName,
         type: detectedType,
         checkCode,
+        productId,
       }),
     });
 

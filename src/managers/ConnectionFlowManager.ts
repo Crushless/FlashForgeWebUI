@@ -1205,6 +1205,7 @@ export class ConnectionFlowManager extends EventEmitter {
       checkCode?: string;
       commandPort?: number;
       httpPort?: number;
+      productId?: number;
     }>
   ): Promise<{ contextId: string; ip: string }[]> {
     const connectedContexts: { contextId: string; ip: string }[] = [];
@@ -1215,14 +1216,17 @@ export class ConnectionFlowManager extends EventEmitter {
 
         const flowId = this.startFlow();
 
+        console.log('[Headless] Connection spec:', spec);
+
         // Create mock discovered printer
         const mockDiscoveredPrinter: DiscoveredPrinter = {
           name: `Printer at ${spec.ip}`,
           ipAddress: spec.ip,
-          serialNumber: '', // Will be determined during connection
+          serialNumber: '',
           model: undefined,
           commandPort: spec.commandPort,
           eventPort: spec.httpPort,
+          productId: spec.productId,
         };
 
         // Determine if this is a 5M family printer
@@ -1265,6 +1269,7 @@ export class ConnectionFlowManager extends EventEmitter {
           model: tempResult.typeName,
           commandPort: spec.commandPort,
           eventPort: spec.httpPort,
+          productId: spec.productId,
         };
 
         const forceLegacyMode = existingPrinter?.forceLegacyMode ?? false;
