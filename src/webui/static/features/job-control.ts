@@ -82,17 +82,17 @@ export function updateFeatureVisibility(): void {
 
   const ledOn = $('btn-led-on') as HTMLButtonElement | null;
   const ledOff = $('btn-led-off') as HTMLButtonElement | null;
-  const ledEnabled =
-    state.printerFeatures.hasLED || state.printerFeatures.ledUsesLegacyAPI || false;
-  const homeAxesButtons =
-    document.querySelectorAll<HTMLButtonElement>('#btn-home-axes');
+  const ledEnabled = features.hasLED || features.ledUsesLegacyAPI || false;
+  const homeAxesButtons = document.querySelectorAll<HTMLButtonElement>('#btn-home-axes');
 
   if (ledOn) {
     ledOn.disabled = !ledEnabled;
   }
+
   if (ledOff) {
     ledOff.disabled = !ledEnabled;
   }
+
   homeAxesButtons.forEach((homeAxes) => {
     homeAxes.disabled = !features.canHome;
     homeAxes.title = features.canHome
