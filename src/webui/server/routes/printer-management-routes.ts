@@ -34,6 +34,7 @@ export function registerPrinterManagementRoutes(router: Router, deps: RouteDepen
       };
 
       const ipAddress = body.ipAddress;
+      const serialNumber = typeof body.serialNumber === 'string' ? body.serialNumber.trim() : undefined;
       const type = body.type;
       const checkCode = body.checkCode;
       const commandPort = body.commandPort;
@@ -59,6 +60,7 @@ export function registerPrinterManagementRoutes(router: Router, deps: RouteDepen
         ip: ipAddress,
         type: type as PrinterClientType,
         checkCode: type === 'new' ? checkCode : undefined,
+        serialNumber,
         commandPort: typeof commandPort === 'number' ? commandPort : undefined,
         httpPort: typeof httpPort === 'number' ? httpPort : undefined,
         productId,

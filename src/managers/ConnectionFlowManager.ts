@@ -1203,6 +1203,7 @@ export class ConnectionFlowManager extends EventEmitter {
       ip: string;
       type: import('../types/printer').PrinterClientType;
       checkCode?: string;
+      serialNumber?: string;
       commandPort?: number;
       httpPort?: number;
       productId?: number;
@@ -1222,7 +1223,7 @@ export class ConnectionFlowManager extends EventEmitter {
         const mockDiscoveredPrinter: DiscoveredPrinter = {
           name: `Printer at ${spec.ip}`,
           ipAddress: spec.ip,
-          serialNumber: '',
+          serialNumber: spec.serialNumber ?? '',
           model: undefined,
           commandPort: spec.commandPort,
           eventPort: spec.httpPort,
@@ -1265,7 +1266,7 @@ export class ConnectionFlowManager extends EventEmitter {
         const updatedDiscoveredPrinter: DiscoveredPrinter = {
           name: printerName,
           ipAddress: spec.ip,
-          serialNumber: serialNumber,
+          serialNumber: spec.serialNumber || serialNumber,
           model: tempResult.typeName,
           commandPort: spec.commandPort,
           eventPort: spec.httpPort,

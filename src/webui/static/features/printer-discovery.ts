@@ -400,12 +400,14 @@ async function connectToDiscoveredPrinter(
  */
 async function connectManually(): Promise<void> {
   const ipInput = $('discovery-manual-ip') as HTMLInputElement | null;
+  const serialInput = $('discovery-manual-serial') as HTMLInputElement | null;
   const typeSelect = $('discovery-printer-type') as HTMLSelectElement | null;
   const checkCodeInput = $('discovery-check-code') as HTMLInputElement | null;
 
   if (!ipInput || !typeSelect) return;
 
   const ip = ipInput.value.trim();
+  const manualSerial = serialInput?.value.trim() ?? '';
   const userSelectedType = typeSelect.value;
   const productId = userSelectedType === 'creator5' ? 40 : userSelectedType === 'creator5pro' ? 41 : undefined;
   const userCheckCode = checkCodeInput?.value.trim();
@@ -413,6 +415,12 @@ async function connectManually(): Promise<void> {
   // Validate IP
   if (!ip) {
     showToast('Please enter an IP address', 'error');
+    return;
+  }
+
+  // Validate Serial
+  if ((userSelectedType === 'creator5' || userSelectedType === 'creator5pro') && !manualSerial) {
+    showToast('Please enter the printer serial number', 'error');
     return;
   }
 
@@ -444,7 +452,7 @@ async function connectManually(): Promise<void> {
 
     const { typeName, serialNumber, is5MFamily, requiresCheckCode, clientType } = detectResponse;
     const detectedName = detectResponse.name || `Printer at ${ip}`;
-    const detectedSerial = serialNumber || '';
+    const detectedSerial = serialNumber || manualSerial;
     const detectedType = clientType || (is5MFamily ? 'new' : 'legacy');
 
     console.log(`[Manual] Detected: ${typeName} (${is5MFamily ? '5M family' : 'legacy'})`);
