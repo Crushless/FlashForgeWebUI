@@ -75,7 +75,8 @@ export async function loadPrinterFeatures(): Promise<void> {
 }
 
 export function updateFeatureVisibility(): void {
-  if (!state.printerFeatures) {
+  const features = state.printerFeatures;
+  if (!features) {
     return;
   }
 
@@ -92,14 +93,12 @@ export function updateFeatureVisibility(): void {
   if (ledOff) {
     ledOff.disabled = !ledEnabled;
   }
-  if (homeAxes) {
-    homeAxesButtons.forEach((homeAxes) => {
-      homeAxes.disabled = !state.printerFeatures.canHome;
-      homeAxes.title = state.printerFeatures.canHome
-      ? 'Home Axes'
-      : 'Homing is not available over the LAN API for this printer';
-    });
-  }
+  homeAxesButtons.forEach((homeAxes) => {
+    homeAxes.disabled = !features.canHome;
+    homeAxes.title = features.canHome
+    ? 'Home Axes'
+    : 'Homing is not available over the LAN API for this printer';
+  });
 }
 
 interface JobStartOptions {
