@@ -155,6 +155,7 @@ export interface PrinterFeatures {
   canPause: boolean;
   canResume: boolean;
   canCancel: boolean;
+  canHome: boolean;
   ledUsesLegacyAPI?: boolean; // Whether custom LED control is enabled
   /** Multi-tool printer (Creator 5 series) — gates the per-tool temperature card. */
   hasMultiTool?: boolean;
