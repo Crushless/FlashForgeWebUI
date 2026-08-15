@@ -83,12 +83,18 @@ export function updateFeatureVisibility(): void {
   const ledOff = $('btn-led-off') as HTMLButtonElement | null;
   const ledEnabled =
     state.printerFeatures.hasLED || state.printerFeatures.ledUsesLegacyAPI || false;
+  const homeAxes = $('btn-home-axes') as HTMLButtonElement | null;
 
   if (ledOn) {
     ledOn.disabled = !ledEnabled;
   }
   if (ledOff) {
     ledOff.disabled = !ledEnabled;
+  }
+  if (homeAxes) {
+    const available = state.printerFeatures.gcodeCommands?.available ?? false;
+    homeAxes.disabled = !available;
+    homeAxes.title = available ? 'Home all axes' : 'Homing is not available over the LAN API for this printer';
   }
 }
 
