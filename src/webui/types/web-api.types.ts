@@ -273,6 +273,7 @@ export interface PrinterFeatures {
   readonly canPause: boolean;
   readonly canResume: boolean;
   readonly canCancel: boolean;
+  readonly canHome: boolean;
   readonly ledUsesLegacyAPI?: boolean; // Whether LED control should use legacy G-code commands
   /** Multi-tool printer (Creator 5 series) — gates the per-tool temperature card. */
   readonly hasMultiTool?: boolean;

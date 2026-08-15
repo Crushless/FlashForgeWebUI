@@ -208,6 +208,7 @@ export function registerPrinterStatusRoutes(router: Router, deps: RouteDependenc
         canPause: features.jobManagement.pauseResume,
         canResume: features.jobManagement.pauseResume,
         canCancel: features.jobManagement.cancelJobs,
+        canHome: features.gcodeCommands.available,
         ledUsesLegacyAPI:
           features.ledControl.customControlEnabled || features.ledControl.usesLegacyAPI,
         hasMultiTool,

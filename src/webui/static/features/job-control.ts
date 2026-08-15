@@ -92,9 +92,10 @@ export function updateFeatureVisibility(): void {
     ledOff.disabled = !ledEnabled;
   }
   if (homeAxes) {
-    const available = state.printerFeatures.gcodeCommands?.available ?? false;
-    homeAxes.disabled = !available;
-    homeAxes.title = available ? 'Home all axes' : 'Homing is not available over the LAN API for this printer';
+    homeAxes.disabled = !state.printerFeatures.canHome;
+    homeAxes.title = state.printerFeatures.canHome
+      ? 'Home Axes'
+      : 'Homing is not available over the LAN API for this printer';
   }
 }
 
