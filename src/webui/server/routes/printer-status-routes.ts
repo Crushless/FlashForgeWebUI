@@ -197,8 +197,10 @@ export function registerPrinterStatusRoutes(router: Router, deps: RouteDependenc
 
       // Creator 5 series capability flags derive from the backend model type.
       const modelType = deps.backendManager.getBackendStatus(contextId)?.capabilities.modelType;
+
+      const isCreator5 = modelType === 'creator-5' || modelType === 'creator-5-pro';
       const isCreator5Pro = modelType === 'creator-5-pro';
-      const hasMultiTool = modelType === 'creator-5' || modelType === 'creator-5-pro';
+      const hasMultiTool = isCreator5;
 
       const featureResponse: PrinterFeatures = {
         hasCamera: deps.backendManager.isFeatureAvailable(contextId, 'camera'),
@@ -208,9 +210,10 @@ export function registerPrinterStatusRoutes(router: Router, deps: RouteDependenc
         canPause: features.jobManagement.pauseResume,
         canResume: features.jobManagement.pauseResume,
         canCancel: features.jobManagement.cancelJobs,
-        canHome: features.gcodeCommands.available,
+        canHome: !isCreator5 && features.gcodeCommands.available,
         ledUsesLegacyAPI:
-          features.ledControl.customControlEnabled || features.ledControl.usesLegacyAPI,
+        features.ledControl.customControlEnabled ||
+        features.ledControl.usesLegacyAPI,
         hasMultiTool,
         isCreator5Pro,
       };
