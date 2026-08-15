@@ -30,6 +30,7 @@ export function registerPrinterDetectionRoutes(router: Router, _deps: RouteDepen
         ipAddress?: string;
         commandPort?: number;
         httpPort?: number;
+        productId?: number;
       };
       const ipAddress = body.ipAddress;
 
@@ -51,10 +52,11 @@ export function registerPrinterDetectionRoutes(router: Router, _deps: RouteDepen
       const mockPrinter: DiscoveredPrinter = {
         name: `Printer at ${ipAddress}`,
         ipAddress,
-        serialNumber: '', // Will be determined during connection
+        serialNumber: '',
         model: undefined,
         commandPort: typeof body.commandPort === 'number' ? body.commandPort : undefined,
         eventPort: typeof body.httpPort === 'number' ? body.httpPort : undefined,
+        productId: typeof body.productId === 'number' ? body.productId : undefined,
       };
 
       // Create temporary connection to probe the printer

@@ -112,7 +112,11 @@ function setupDiscoveryModal(): void {
   const typeSelect = $('discovery-printer-type') as HTMLSelectElement | null;
   typeSelect?.addEventListener('change', () => {
     const checkCodeGroup = $('discovery-check-code-group');
-    if (typeSelect.value === 'new') {
+    if (
+      typeSelect.value === 'new' ||
+      typeSelect.value === 'creator5' ||
+      typeSelect.value === 'creator5pro'
+    ) {
       checkCodeGroup?.classList.remove('hidden');
     } else {
       checkCodeGroup?.classList.add('hidden');
@@ -403,6 +407,7 @@ async function connectManually(): Promise<void> {
 
   const ip = ipInput.value.trim();
   const userSelectedType = typeSelect.value;
+  const productId = userSelectedType === 'creator5' ? 40 : userSelectedType === 'creator5pro' ? 41 : undefined;
   const userCheckCode = checkCodeInput?.value.trim();
 
   // Validate IP
@@ -427,7 +432,10 @@ async function connectManually(): Promise<void> {
     }>('/api/printers/detect', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ipAddress: ip }),
+      body: JSON.stringify({
+        ipAddress: ip,
+        productId,
+      }),
     });
 
     if (!detectResponse.success || !detectResponse.typeName) {
@@ -442,7 +450,8 @@ async function connectManually(): Promise<void> {
     console.log(`[Manual] Detected: ${typeName} (${is5MFamily ? '5M family' : 'legacy'})`);
 
     // STEP 2: Validate user selection against detection (warn if mismatch)
-    if (userSelectedType !== detectedType) {
+    const selectedClientType = userSelectedType === 'creator5' || userSelectedType === 'creator5pro' ? 'new' : userSelectedType;
+    if (selectedClientType !== detectedType) {
       const proceed = confirm(
         `Warning: You selected "${userSelectedType}" but the printer was detected as "${detectedType}".\n\n` +
           `Using detected type: ${detectedType}\n\nContinue?`
